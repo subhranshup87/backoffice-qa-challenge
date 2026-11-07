@@ -19,5 +19,11 @@ export async function POST(_request: Request, ctx: RouteContext<"/api/payouts/[i
     return NextResponse.json({ error: "Customer not found" }, { status: 404 });
   }
 
+  if (payout.status !== "pending") {
+    return NextResponse.json(
+      { error: `This payout has already been ${payout.status}.` },
+      { status: 409 },
+    );
+  }
   return NextResponse.json({ payout: approvePayout(id) });
 }
